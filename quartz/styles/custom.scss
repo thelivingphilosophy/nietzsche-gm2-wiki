@@ -148,11 +148,13 @@ article {
       display: block;
       width: 220px;
       height: 220px;
-      background-image: url("/static/nietzsche-icon.png");
+      border-radius: 50%;
+      background-color: #802e07;
+      background-image: url("/static/nietzsche-icon.svg");
       background-size: 134%;
       background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 50%;
+      background-position: center center;
+      overflow: hidden;
     }
   }
 }
@@ -264,10 +266,10 @@ article {
   }
 }
 
-// ── Dark mode logo ring ───────────────────────────────────────────────────────
+// ── Dark mode logo ────────────────────────────────────────────────────────────
 
 [saved-theme="dark"] #quartz-body .sidebar.left h2.page-title::before {
-  box-shadow: 0 0 0 4px #27272d;
+  background-color: #802e07;
 }
 
 // ── Footer ────────────────────────────────────────────────────────────────────
