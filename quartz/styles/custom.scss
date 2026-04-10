@@ -1,3 +1,322 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+// ── Body & global type ────────────────────────────────────────────────────────
+
+body {
+  font-size: 1.08rem;
+}
+
+// ── Article content ───────────────────────────────────────────────────────────
+
+article {
+  line-height: 1.85rem;
+
+  // Page title — decorative ruled underline
+  > h1:first-of-type {
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    border-bottom: 2px solid var(--secondary);
+    padding-bottom: 0.55rem;
+    margin-bottom: 1.6rem;
+    color: var(--dark);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border-bottom: 1px solid var(--lightgray);
+    padding-bottom: 0.25rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  // Internal wikilinks — warm underline, no pill
+  a.internal {
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    line-height: inherit;
+    border-bottom: 1px solid color-mix(in srgb, var(--secondary) 45%, transparent);
+    font-weight: inherit;
+    transition: color 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+      color: var(--tertiary);
+      border-bottom-color: var(--tertiary);
+    }
+  }
+
+  // Blockquotes — philosophical quotation style
+  blockquote {
+    border-left: 3px solid var(--secondary);
+    padding: 0.4rem 1.4rem;
+    margin: 1.8rem 0;
+    font-style: italic;
+
+    p {
+      margin: 0;
+      color: var(--darkgray);
+      line-height: 1.85rem;
+    }
+  }
+
+  // Tables — clean ruled academic style
+  .table-container {
+    margin: 1.5rem 0;
+
+    > table {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      font-size: 0.97rem;
+
+      th {
+        font-family: var(--headerFont);
+        font-size: 0.8rem;
+        font-style: normal;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        font-weight: 700;
+        border-bottom: 2px solid var(--secondary);
+        color: var(--dark);
+        padding: 0.4rem 0.8rem;
+        background: none;
+      }
+
+      td {
+        padding: 0.45rem 0.8rem;
+        border-bottom: 1px solid var(--lightgray);
+        vertical-align: top;
+        line-height: 1.6rem;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr:hover td {
+        background: var(--highlight);
+      }
+    }
+  }
+
+  // Horizontal rule — section break
+  hr {
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--secondary),
+      transparent
+    );
+    height: 1px;
+    margin: 2.5rem auto;
+    width: 60%;
+    opacity: 0.4;
+  }
+
+  // Strong text — slightly warmer
+  strong {
+    color: var(--dark);
+  }
+}
+
+// ── Sidebar left ──────────────────────────────────────────────────────────────
+
+#quartz-body .sidebar.left {
+  // Logo + site title block
+  h2.page-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--lightgray);
+    margin-bottom: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+
+    &::before {
+      content: "";
+      display: block;
+      width: 220px;
+      height: 220px;
+      background-image: url("/static/nietzsche-icon.png");
+      background-size: 134%;
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 50%;
+    }
+  }
+}
+
+// ── Breadcrumbs ───────────────────────────────────────────────────────────────
+
+.breadcrumb-container {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  font-family: var(--bodyFont);
+
+  a {
+    font-weight: 400;
+    color: var(--gray);
+    background: none;
+    border: none;
+    padding: 0;
+
+    &:hover {
+      color: var(--secondary);
+    }
+  }
+
+  .breadcrumb-element {
+    color: var(--gray);
+  }
+}
+
+// ── Content meta ──────────────────────────────────────────────────────────────
+
+.content-meta {
+  font-size: 0.8rem;
+  color: var(--gray);
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid var(--lightgray);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.8rem;
+  font-style: italic;
+
+  span, a {
+    color: var(--gray);
+    font-weight: 400;
+  }
+}
+
+// ── Right sidebar panels ──────────────────────────────────────────────────────
+
+.backlinks,
+.toc {
+  font-size: 0.88rem;
+
+  // Panel headings — small caps label
+  > h3,
+  > button {
+    font-family: var(--bodyFont);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray);
+    font-weight: 700;
+    font-style: normal;
+    border: none;
+    background: none;
+    padding: 0;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// ── Tags ─────────────────────────────────────────────────────────────────────
+
+.tags {
+  margin-bottom: 0.5rem;
+
+  a.internal.tag-link {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    font-family: var(--bodyFont);
+    background: var(--highlight) !important;
+    border-bottom: none !important;
+    border-radius: 2px !important;
+    padding: 0.1rem 0.45rem !important;
+    color: var(--secondary) !important;
+
+    &::before {
+      content: "" !important;
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--secondary) 15%, transparent) !important;
+      color: var(--tertiary) !important;
+    }
+  }
+}
+
+// ── Graph view ───────────────────────────────────────────────────────────────
+
+.graph {
+  > h3 {
+    font-family: var(--bodyFont);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray);
+    font-weight: 700;
+  }
+}
+
+// ── Dark mode logo ring ───────────────────────────────────────────────────────
+
+[saved-theme="dark"] #quartz-body .sidebar.left h2.page-title::before {
+  box-shadow: 0 0 0 4px #27272d;
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+
+footer {
+  border-top: 1px solid var(--lightgray);
+  padding-top: 1rem;
+  font-size: 0.8rem;
+  font-style: italic;
+
+  p,
+  a {
+    color: var(--gray);
+    font-weight: 400;
+  }
+}
+
+// ── Explorer (file tree) ──────────────────────────────────────────────────────
+
+.explorer {
+  font-size: 0.9rem;
+
+  // Folder labels
+  button.folder-button {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: var(--gray);
+    font-family: var(--bodyFont);
+  }
+}
+
+// ── Search ────────────────────────────────────────────────────────────────────
+
+#search-container {
+  input {
+    font-family: var(--bodyFont);
+    font-size: 0.9rem;
+  }
+}
+
+// ── Navigation progress bar ───────────────────────────────────────────────────
+
+.navigation-progress {
+  background: linear-gradient(
+    to right,
+    var(--secondary),
+    var(--tertiary)
+  );
+  height: 2px;
+}
