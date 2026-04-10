@@ -269,7 +269,8 @@ article {
 // ── Dark mode logo ────────────────────────────────────────────────────────────
 
 [saved-theme="dark"] #quartz-body .sidebar.left h2.page-title::before {
-  background-color: #802e07;
+  background-color: #18181c;
+  background-image: url("/static/nietzsche-icon-dark.svg");
 }
 
 // ── Footer ────────────────────────────────────────────────────────────────────
