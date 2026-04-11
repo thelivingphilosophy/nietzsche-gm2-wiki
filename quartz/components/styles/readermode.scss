@@ -43,7 +43,7 @@
 
   // Fade individual left sidebar items but keep the reader mode button visible
   // (opacity on a parent is inescapable by children, so we target children directly)
-  & .sidebar.left > *:not(.readermode) {
+  & .sidebar.left > *:not(.readermode):not(:has(.readermode)) {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
