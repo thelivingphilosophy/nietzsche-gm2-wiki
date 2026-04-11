@@ -1,14 +1,14 @@
 /**
  * Netlify Function: chat
  *
- * Proxies to OpenAI with an agentic loop:
- *   1. System prompt = wiki index.md (entry point for navigation)
- *   2. Model has a read_page(path) tool to retrieve any wiki page on demand
- *   3. Loop until model produces a text response (cap: 5 tool calls per request)
+ * Index-first wiki navigation (Karpathy pattern):
+ *   1. System prompt contains index.md only
+ *   2. Model calls read_page(path) to retrieve specific pages on demand
+ *   3. Loop until model produces a text response (cap: 5 tool calls)
  *
  * Env vars:
  *   OPENAI_API_KEY  (required)
- *   OPENAI_MODEL    (optional, default: gpt-4o-mini)
+ *   OPENAI_MODEL    (optional, default: gpt-5-mini)
  */
 
 import { index, pages } from './wiki-pages.js';
@@ -21,19 +21,11 @@ const CORS_HEADERS = {
 
 const SYSTEM_PROMPT = `You are a philosophical discussion guide for Nietzsche's On the Genealogy of Morals, Second Essay: "Guilt, Bad Conscience, and the Like" (Kaufmann translation, §1–25).
 
-You have access to a curated wiki built around this essay. Navigate it the way you would navigate any well-organized knowledge base:
-- The wiki index below lists all pages with brief descriptions — read it to find what's relevant to any question
-- Use the read_page tool to retrieve the full content of any page that will help you answer
-- Synthesize answers with §-number citations (§1, §14, etc.)
+You have access to a curated wiki. Use the read_page tool to retrieve pages — start with the index to find what's relevant, then read specific pages to ground your answer.
 
-Key terms to use consistently:
-- Schuld = guilt / debt (the double meaning is central to §4)
-- schlechtes Gewissen = bad conscience
-- Ressentiment (keep the French, as Nietzsche does)
-- Vergesslichkeit = active forgetting
-- Wille zur Macht = will to power
+Synthesize answers with §-number citations. Key terms: Schuld (guilt/debt), schlechtes Gewissen (bad conscience), Ressentiment, Vergesslichkeit (active forgetting), Wille zur Macht (will to power).
 
-Be a rigorous but welcoming interlocutor. Draw people into thinking, don't just inform. Acknowledge genuine tensions and ambiguities. This is for book club discussion prep.
+Be a rigorous but welcoming interlocutor. Draw people into thinking. Acknowledge tensions and ambiguities. This is book club discussion prep.
 
 WIKI INDEX:
 ${index}`;
@@ -42,13 +34,13 @@ const READ_PAGE_TOOL = {
   type: 'function',
   function: {
     name: 'read_page',
-    description: 'Read the full content of a wiki page by its path. Use paths exactly as listed in the index (e.g. "concepts/bad-conscience.md", "connections/debt-creates-guilt.md").',
+    description: 'Read the full content of a wiki page. Use paths exactly as listed in the index, e.g. "concepts/bad-conscience.md".',
     parameters: {
       type: 'object',
       properties: {
         path: {
           type: 'string',
-          description: 'The wiki page path relative to content/, e.g. "concepts/sovereign-individual.md"',
+          description: 'Wiki page path, e.g. "concepts/sovereign-individual.md"',
         },
       },
       required: ['path'],
@@ -59,8 +51,7 @@ const READ_PAGE_TOOL = {
 function readPage(path) {
   const content = pages[path];
   if (!content) {
-    const available = Object.keys(pages).join('\n');
-    return `Page not found: "${path}"\n\nAvailable pages:\n${available}`;
+    return `Page not found: "${path}". Available: ${Object.keys(pages).join(', ')}`;
   }
   return content;
 }
@@ -76,7 +67,6 @@ async function callOpenAI(messages, apiKey, model) {
       model,
       messages,
       tools: [READ_PAGE_TOOL],
-      tool_choice: 'auto',
       max_completion_tokens: 10000,
     }),
   });
@@ -118,10 +108,9 @@ export const handler = async (event) => {
     };
   }
 
-  const model = process.env.OPENAI_MODEL ?? 'gpt-4o-mini';
+  const model = process.env.OPENAI_MODEL ?? 'gpt-5-mini';
   const messages = [{ role: 'system', content: SYSTEM_PROMPT }, ...userMessages];
 
-  // Agentic loop: keep calling until we get a text response or hit the cap
   const MAX_TOOL_CALLS = 5;
   let toolCallCount = 0;
 
@@ -130,15 +119,16 @@ export const handler = async (event) => {
       const data = await callOpenAI(messages, apiKey, model);
       const choice = data.choices[0];
 
-      if (choice.finish_reason === 'tool_calls') {
-        // Append the assistant's tool-call message
+      console.log(`[chat] finish_reason=${choice.finish_reason} content=${JSON.stringify(choice.message.content)?.slice(0, 80)} tool_calls=${choice.message.tool_calls?.length ?? 0}`);
+
+      if (choice.finish_reason === 'tool_calls' || choice.message.tool_calls?.length > 0) {
         messages.push(choice.message);
 
-        // Execute each tool call and append results
         for (const toolCall of choice.message.tool_calls) {
           let result;
           if (toolCall.function.name === 'read_page') {
             const { path } = JSON.parse(toolCall.function.arguments);
+            console.log(`[chat] reading page: ${path}`);
             result = readPage(path);
           } else {
             result = `Unknown tool: ${toolCall.function.name}`;
@@ -153,28 +143,31 @@ export const handler = async (event) => {
           toolCallCount++;
         }
       } else {
-        // Final text response
+        const content = choice.message.content;
+        if (!content) {
+          console.error('[chat] empty content in final response:', JSON.stringify(data));
+          throw new Error('Model returned an empty response.');
+        }
         return {
           statusCode: 200,
           headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: choice.message.content }),
+          body: JSON.stringify({ message: content }),
         };
       }
     }
 
-    // Hit the cap — ask the model to respond with what it has
-    messages.push({
-      role: 'user',
-      content: '[Please provide your best answer now based on what you have read.]',
-    });
+    // Hit cap — force a final answer
+    messages.push({ role: 'user', content: '[Please answer now based on what you have read.]' });
     const final = await callOpenAI(messages, apiKey, model);
+    const content = final.choices[0].message.content ?? 'No response generated.';
     return {
       statusCode: 200,
       headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: final.choices[0].message.content }),
+      body: JSON.stringify({ message: content }),
     };
+
   } catch (err) {
-    console.error('Chat function error:', err);
+    console.error('[chat] error:', err.message);
     return {
       statusCode: 500,
       headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
