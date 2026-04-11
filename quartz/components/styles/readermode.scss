@@ -1,3 +1,5 @@
+@use "../../styles/variables.scss" as *;
+
 .readermode {
   cursor: pointer;
   padding: 0;
@@ -19,16 +21,31 @@
     stroke: var(--darkgray);
     transition: opacity 0.1s ease;
   }
+
+  // Hidden on mobile — right sidebar is already gone, button does nothing
+  @media all and ($mobile) {
+    display: none;
+  }
 }
 
 :root[reader-mode="on"] {
-  & .sidebar.left,
+  // Right sidebar fades entirely — no important controls live there
   & .sidebar.right {
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.2s ease;
 
     &:hover {
       opacity: 1;
+      pointer-events: auto;
     }
+  }
+
+  // Fade individual left sidebar items but keep the reader mode button visible
+  // (opacity on a parent is inescapable by children, so we target children directly)
+  & .sidebar.left > *:not(.readermode) {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
   }
 }
