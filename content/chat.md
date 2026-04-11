@@ -5,6 +5,8 @@ created: 2026-04-11
 updated: 2026-04-11
 ---
 
+<style>.sidebar.right { display: none !important; }</style>
+
 A conversational interface for exploring the Second Essay. Ask questions, test interpretations, prep for book club discussion.
 
 The model reads the wiki index first, then retrieves specific pages as needed to answer — the same way you'd navigate the wiki yourself.

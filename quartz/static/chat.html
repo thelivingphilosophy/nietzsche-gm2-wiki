@@ -410,7 +410,7 @@
     const readingLbl = document.getElementById('readingLabel');
 
     // ── Markdown rendering ──
-    marked.setOptions({ breaks: true, gfm: true });
+    marked.use({ breaks: true, gfm: true });
 
     function renderMarkdown(text) {
       return marked.parse(text);
