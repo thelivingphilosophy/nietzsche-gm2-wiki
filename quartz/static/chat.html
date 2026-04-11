@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat — Nietzsche GM2 Wiki</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    /* ── Theme variables ── */
+    :root {
+      --bg:        #f5f0e8;
+      --bg-panel:  #ede8df;
+      --bg-input:  #ffffff;
+      --text:      #1a0f05;
+      --text-dim:  #9a8e7d;
+      --accent:    #7a3b1e;
+      --accent2:   #c4701a;
+      --border:    #ddd5c5;
+      --user-bg:   rgba(122, 59, 30, 0.10);
+      --asst-bg:   #ffffff;
+      --shadow:    rgba(26, 15, 5, 0.08);
+    }
+    [data-theme="dark"] {
+      --bg:        #18181c;
+      --bg-panel:  #1e1e24;
+      --bg-input:  #27272d;
+      --text:      #edeae2;
+      --text-dim:  #58586a;
+      --accent:    #c4884a;
+      --accent2:   #e0a060;
+      --border:    #2e2e38;
+      --user-bg:   rgba(196, 136, 74, 0.13);
+      --asst-bg:   #1e1e24;
+      --shadow:    rgba(0, 0, 0, 0.3);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-link {
+      font-size: 14px;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link::before { content: '←  '; }
+
+    .site-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+    .site-title span {
+      color: var(--accent);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-clear {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 14px;
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 12px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .btn-clear:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Messages ── */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      max-width: 88%;
+    }
+    .message.user  { align-self: flex-end; align-items: flex-end; }
+    .message.assistant { align-self: flex-start; align-items: flex-start; }
+
+    .bubble {
+      padding: 12px 16px;
+      border-radius: 12px;
+      line-height: 1.65;
+    }
+    .message.user .bubble {
+      background: var(--user-bg);
+      border-bottom-right-radius: 3px;
+      color: var(--text);
+    }
+    .message.assistant .bubble {
+      background: var(--asst-bg);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 3px;
+      box-shadow: 0 1px 4px var(--shadow);
+    }
+
+    /* Markdown content inside bubbles */
+    .bubble p { margin-bottom: 0.75em; }
+    .bubble p:last-child { margin-bottom: 0; }
+    .bubble strong { font-weight: 600; color: var(--accent); }
+    .bubble em { font-style: italic; }
+    .bubble ul, .bubble ol { padding-left: 1.4em; margin-bottom: 0.75em; }
+    .bubble li { margin-bottom: 0.2em; }
+    .bubble code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85em;
+      background: var(--bg-panel);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .bubble h3 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05em;
+      font-weight: 600;
+      margin-bottom: 0.4em;
+    }
+    .bubble blockquote {
+      border-left: 3px solid var(--accent);
+      margin-left: 0;
+      padding-left: 12px;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-bottom: 0.75em;
+    }
+
+    .role-label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+      padding: 0 2px;
+    }
+
+    /* ── Typing indicator ── */
+    .typing-indicator {
+      align-self: flex-start;
+      display: none;
+      align-items: center;
+      gap: 4px;
+      padding: 14px 18px;
+      background: var(--asst-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-bottom-left-radius: 3px;
+      box-shadow: 0 1px 4px var(--shadow);
+    }
+    .typing-indicator.visible { display: flex; }
+    .typing-indicator .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      animation: bounce 1.2s infinite;
+    }
+    .typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .reading-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      font-style: italic;
+      letter-spacing: 0.01em;
+      padding: 0 4px;
+      display: none;
+    }
+    .reading-label.visible { display: block; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-dim);
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .empty-state .icon {
+      font-size: 36px;
+      opacity: 0.4;
+    }
+    .empty-state h2 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 22px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-dim);
+    }
+    .empty-state p {
+      font-size: 15px;
+      max-width: 380px;
+    }
+    .suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .suggestion {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 15px;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, color 0.15s;
+      font-family: 'Crimson Pro', Georgia, serif;
+    }
+    .suggestion:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Input area ── */
+    footer {
+      padding: 12px 20px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    textarea {
+      flex: 1;
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--text);
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      resize: none;
+      outline: none;
+      min-height: 44px;
+      max-height: 140px;
+      overflow-y: auto;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: var(--accent); }
+    textarea::placeholder { color: var(--text-dim); }
+
+    .btn-send {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--bg);
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      height: 44px;
+      transition: background 0.15s, opacity 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-send:hover { background: var(--accent2); }
+    .btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .input-hint {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 6px;
+      padding: 0 2px;
+    }
+
+    /* ── Scrollbar ── */
+    .messages::-webkit-scrollbar { width: 5px; }
+    .messages::-webkit-scrollbar-track { background: transparent; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <header>
+      <div class="header-left">
+        <a class="back-link" href="/">Wiki</a>
+        <span class="site-title">Nietzsche GM2 — <span>Chat</span></span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-clear" id="clearBtn" title="Start a new conversation">New conversation</button>
+      </div>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="empty-state" id="emptyState">
+        <div class="icon">⚖</div>
+        <h2>Ask anything about the Second Essay</h2>
+        <p>The wiki index is already loaded. Ask a question and the model will navigate the wiki to answer it.</p>
+        <div class="suggestions">
+          <button class="suggestion" onclick="sendSuggestion(this)">What is the relationship between guilt and debt in §4–6?</button>
+          <button class="suggestion" onclick="sendSuggestion(this)">How does Nietzsche argue punishment doesn't produce bad conscience?</button>
+          <button class="suggestion" onclick="sendSuggestion(this)">Who is the sovereign individual — Nietzsche's ideal, or a setup for critique?</button>
+        </div>
+      </div>
+      <div class="typing-indicator" id="typingIndicator">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <div class="reading-label" id="readingLabel">Reading the wiki…</div>
+
+    <footer>
+      <div class="input-row">
+        <textarea
+          id="input"
+          placeholder="Ask about the essay…"
+          rows="1"
+          autofocus
+        ></textarea>
+        <button class="btn-send" id="sendBtn">Send</button>
+      </div>
+      <div class="input-hint">Enter to send · Shift+Enter for new line</div>
+    </footer>
+  </div>
+
+  <script>
+    // ── Theme detection ──
+    (function() {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = stored ?? (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+
+    // ── State ──
+    let messages = [];
+    let isLoading = false;
+
+    const messagesEl = document.getElementById('messages');
+    const inputEl    = document.getElementById('input');
+    const sendBtn    = document.getElementById('sendBtn');
+    const clearBtn   = document.getElementById('clearBtn');
+    const emptyState = document.getElementById('emptyState');
+    const typing     = document.getElementById('typingIndicator');
+    const readingLbl = document.getElementById('readingLabel');
+
+    // ── Markdown rendering ──
+    marked.setOptions({ breaks: true, gfm: true });
+
+    function renderMarkdown(text) {
+      return marked.parse(text);
+    }
+
+    // ── DOM helpers ──
+    function appendMessage(role, content) {
+      if (emptyState) emptyState.remove();
+
+      const wrap = document.createElement('div');
+      wrap.className = `message ${role}`;
+
+      const label = document.createElement('div');
+      label.className = 'role-label';
+      label.textContent = role === 'user' ? 'You' : 'Wiki';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      if (role === 'assistant') {
+        bubble.innerHTML = renderMarkdown(content);
+      } else {
+        bubble.textContent = content;
+      }
+
+      wrap.appendChild(label);
+      wrap.appendChild(bubble);
+
+      // Insert before the typing indicator
+      messagesEl.insertBefore(wrap, typing);
+      scrollToBottom();
+    }
+
+    function scrollToBottom() {
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function setLoading(on) {
+      isLoading = on;
+      sendBtn.disabled = on;
+      typing.classList.toggle('visible', on);
+      readingLbl.classList.toggle('visible', on);
+      if (on) scrollToBottom();
+    }
+
+    // ── Send message ──
+    async function sendMessage(text) {
+      text = text.trim();
+      if (!text || isLoading) return;
+
+      inputEl.value = '';
+      inputEl.style.height = 'auto';
+
+      appendMessage('user', text);
+      messages.push({ role: 'user', content: text });
+      setLoading(true);
+
+      try {
+        const res = await fetch('/.netlify/functions/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+          throw new Error(err.error ?? `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        const reply = data.message;
+        messages.push({ role: 'assistant', content: reply });
+        setLoading(false);
+        appendMessage('assistant', reply);
+
+      } catch (err) {
+        setLoading(false);
+        appendMessage('assistant', `Something went wrong: ${err.message}`);
+      }
+    }
+
+    function sendSuggestion(btn) {
+      sendMessage(btn.textContent);
+    }
+
+    // ── Input events ──
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage(inputEl.value);
+      }
+    });
+
+    sendBtn.addEventListener('click', () => sendMessage(inputEl.value));
+
+    inputEl.addEventListener('input', () => {
+      inputEl.style.height = 'auto';
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + 'px';
+    });
+
+    // ── Clear ──
+    clearBtn.addEventListener('click', () => {
+      messages = [];
+      messagesEl.innerHTML = `
+        <div class="empty-state" id="emptyState">
+          <div class="icon">⚖</div>
+          <h2>Ask anything about the Second Essay</h2>
+          <p>The wiki index is already loaded. Ask a question and the model will navigate the wiki to answer it.</p>
+          <div class="suggestions">
+            <button class="suggestion" onclick="sendSuggestion(this)">What is the relationship between guilt and debt in §4–6?</button>
+            <button class="suggestion" onclick="sendSuggestion(this)">How does Nietzsche argue punishment doesn't produce bad conscience?</button>
+            <button class="suggestion" onclick="sendSuggestion(this)">Who is the sovereign individual — Nietzsche's ideal, or a setup for critique?</button>
+          </div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>`;
+    });
+  </script>
+</body>
+</html>

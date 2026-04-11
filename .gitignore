@@ -1,4 +1,6 @@
 .DS_Store
+netlify/functions/wiki-pages.js
+.env
 .gitignore
 node_modules
 public

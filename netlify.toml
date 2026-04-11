@@ -1,9 +1,13 @@
 [build]
-  command = "npx quartz build"
+  command = "node scripts/compile-wiki-context.mjs && npx quartz build"
   publish = "public"
 
 [build.environment]
   NODE_VERSION = "20"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
 
 [[redirects]]
   from = "/*"
