@@ -2,6 +2,7 @@
 title: "Forgetfulness vs Bad Conscience"
 type: connection
 concepts:
+  - "[[active-forgetfulness]]"
   - "[[memory-and-promising]]"
   - "[[bad-conscience]]"
   - "[[sovereign-individual]]"
@@ -61,6 +62,7 @@ This connection reframes the essay's moral arc. Nietzsche is not simply saying "
 
 ## See Also
 
+- [[active-forgetfulness]] — the concept page for the left side of this polarity
 - [[memory-and-promising]] — the forced counter-faculty that overrides forgetfulness
 - [[bad-conscience]] — the illness that creates the soul
 - [[sovereign-individual]] — the possible synthesis

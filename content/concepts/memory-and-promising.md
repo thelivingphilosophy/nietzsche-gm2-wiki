@@ -62,6 +62,7 @@ Gemes (2006: 327) draws a sharp distinction between the calculability the morali
 
 ## See Also
 
+- [[active-forgetfulness]] — the faculty that memory-making works against
 - [[sovereign-individual]] — the "ripest fruit" that this process produces
 - [[creditor-debtor]] — where the memory of debt becomes the memory of guilt
 - [[bad-conscience]] — the internalization that transforms external mnemotechnics into self-torture

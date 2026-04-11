@@ -15,7 +15,7 @@ updated: 2026-04-10
 
 | § | Topic | Key Move | Concept Pages |
 |---|-------|----------|---------------|
-| 1 | Forgetfulness and promising | Forgetfulness is an active force; the real problem is breeding an animal that can promise | [[memory-and-promising]] |
+| 1 | Forgetfulness and promising | Forgetfulness is an active force; the real problem is breeding an animal that can promise | [[active-forgetfulness]], [[memory-and-promising]] |
 | 2 | The sovereign individual | The "ripest fruit" of the morality of mores: free, autonomous, supramoral | [[sovereign-individual]], [[conscience]] |
 | 3 | Conscience and mnemotechnics | Conscience as instinct; pain as the oldest memory aid | [[memory-and-promising]], [[conscience]] |
 | 4 | Schuld = guilt = debt | The etymological and conceptual identity of guilt and debt | [[guilt]], [[creditor-debtor]] |
@@ -45,6 +45,7 @@ updated: 2026-04-10
 
 | Page | Summary | Sections | Updated |
 |------|---------|----------|---------|
+| [[concepts/active-forgetfulness\|Active Forgetfulness (Hemmungsvermögen)]] | Forgetfulness as positive faculty of repression; the dyspeptic; Freud's inversion | §1 | 2026-04-11 |
 | [[concepts/memory-and-promising\|Memory and Promising]] | Active forgetfulness vs. the memory of the will; mnemotechnics through pain | §1–3 | 2026-04-08 |
 | [[concepts/sovereign-individual\|The Sovereign Individual]] | The autonomous human who has earned the right to make promises — free, supramoral | §2 | 2026-04-08 |
 | [[concepts/conscience\|Conscience (Gewissen)]] | Conscience *without* the "bad": sovereign self-mastery (§2), the good conscience of cruelty (§7), the active type's "better conscience" (§11) | §2–3, §7, §11 | 2026-04-10 |
@@ -59,13 +60,7 @@ updated: 2026-04-10
 | [[concepts/bad-conscience\|Bad Conscience]] | Sea animals on land: internalization of instincts; consciousness as weakest organ; instinct for freedom = will to power; illness pregnant with future | §16–18 | 2026-04-10 |
 | [[concepts/guilt-before-god\|Guilt Before God]] | Ancestor debt → tribal gods → the Christian maximum; God as creditor; Ridley vs Risse debate | §19–22 | 2026-04-10 |
 | [[concepts/ascetic-ideals-foreshadowed\|Ascetic Ideals Foreshadowed]] | Greek gods as nobler alternative (§23); redirect bad conscience to unnatural ideals (§24); break-off to Zarathustra (§25) | §23–25 | 2026-04-10 |
-| [[concepts/three-stages\|The Three Stages]] | Blond beast → social straitjacket → sovereign individual; psychological strata, not strict chronology | §1–3, §16–17 | 2026-04-10 |
-| [[concepts/naturalism-and-mps\|Naturalism and MPS]] | Leiter's framework: Nietzsche as naturalist, MPS as target; fatalism, type-facts, anti-realism | §1–3, §12–18 | 2026-04-10 |
-| [[concepts/doctrine-of-types\|Doctrine of Types]] | Leiter: type-facts (psycho-physiological constitution) as causally primary; Nietzschean fatalism; why universal morality fails | §2, §14–17, §24 | 2026-04-10 |
 | [[concepts/doer-and-the-deed\|The Doer and the Deed]] | GM I:13's attack on the metaphysical subject — three scholarly readings (Leiter, Gemes, Janaway) and consequences for Essay 2 | GM I:13, §2, §14–15 | 2026-04-10 |
-| [[concepts/genealogy-as-method\|Genealogy as Method]] | Leiter's five principles: naturalistic explanation, type-identification, contingency, form/meaning separation, undermining self-understanding | §4–8, §12–16, §23 | 2026-04-10 |
-| [[concepts/personhood-as-achievement\|Personhood as Achievement]] | Gemes: most humans are "jumbles of drives," not genuine persons; the sovereign individual as rare achieved selfhood | §1–3, §16–18, §24 | 2026-04-10 |
-| [[concepts/schopenhauer-and-the-second-essay\|Schopenhauer and the Second Essay]] | Fatalism, empirical character, the problem of suffering, *Mitleid* — Schopenhauer's pervasive influence on Essay 2 | §1–3, §15–18, §24 | 2026-04-10 |
 
 ## Connections
 
@@ -85,6 +80,19 @@ updated: 2026-04-10
 | [[connections/three-essays-unified\|Three Essays Unified]] | Leiter's argument: the ascetic ideal (Essay 3) explains why bad conscience became guilt — unifying all three essays | [[bad-conscience]], [[guilt-before-god]], [[ascetic-ideals-foreshadowed]] | 2026-04-10 |
 | [[connections/autonomy-and-new-values\|Autonomy and New Values]] | Janaway: sovereign individual points toward value-creation, not just self-mastery; Nietzschean vs. Kantian autonomy | [[sovereign-individual]], [[ascetic-ideals-foreshadowed]], [[conscience]] | 2026-04-10 |
 | [[connections/essay-schematic\|Essay Schematic]] | Full ASCII structural map: two threads, cruelty as fuel, convergence at §19, the trap, the detonation, and the fork | All | 2026-04-10 |
+| [[connections/three-stages\|The Three Stages]] | Blond beast → social straitjacket → sovereign individual; psychological strata, not strict chronology | §1–3, §16–17 | 2026-04-11 |
+| [[connections/from-self-laceration-to-self-formation\|From Self-Laceration to Self-Formation: The Artists' Cruelty]] | The precise mechanism: how bad conscience flips from self-destruction to self-formation via §18's "artists' cruelty" | [[bad-conscience]], [[sovereign-individual]], [[will-to-power]] | 2026-04-11 |
+| [[connections/concept-dependency-hierarchy\|Concept Dependency Hierarchy]] | Derivation map: what must exist before what else can exist — primitives → first-order constructs → convergence products | All | 2026-04-11 |
+
+## Scholars
+
+| Page | Summary | Scholar | Updated |
+|------|---------|---------|---------|
+| [[scholars/naturalism-and-mps\|Naturalism and MPS]] | Leiter: Nietzsche as naturalist, MPS as target; fatalism, type-facts, anti-realism | Brian Leiter | 2026-04-11 |
+| [[scholars/doctrine-of-types\|Doctrine of Types]] | Leiter: type-facts as causally primary; Nietzschean fatalism; why universal morality fails | Brian Leiter | 2026-04-11 |
+| [[scholars/genealogy-as-method\|Genealogy as Method]] | Leiter's five principles + Janaway's genealogy of affects; how the method structures the essay | Leiter / Janaway | 2026-04-11 |
+| [[scholars/personhood-as-achievement\|Personhood as Achievement]] | Gemes: most humans are "jumbles of drives"; sovereign individual as rare achieved selfhood | Ken Gemes | 2026-04-11 |
+| [[scholars/schopenhauer-and-the-second-essay\|Schopenhauer and the Second Essay]] | Fatalism, empirical character, suffering, *Mitleid* — Schopenhauer's influence on Essay 2 | Schopenhauer (via Leiter / Janaway) | 2026-04-11 |
 
 ## Questions
 
