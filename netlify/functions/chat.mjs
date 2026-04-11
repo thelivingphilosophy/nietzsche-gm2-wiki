@@ -77,8 +77,7 @@ async function callOpenAI(messages, apiKey, model) {
       messages,
       tools: [READ_PAGE_TOOL],
       tool_choice: 'auto',
-      max_tokens: 1000,
-      temperature: 0.7,
+      max_completion_tokens: 1000,
     }),
   });
 
