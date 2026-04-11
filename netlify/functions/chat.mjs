@@ -77,7 +77,7 @@ async function callOpenAI(messages, apiKey, model) {
       messages,
       tools: [READ_PAGE_TOOL],
       tool_choice: 'auto',
-      max_completion_tokens: 1000,
+      max_completion_tokens: 4000,
     }),
   });
 
